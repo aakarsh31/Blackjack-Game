@@ -1,0 +1,111 @@
+import random
+from re import I
+cash = 0
+def again():
+    while True:
+        ag = input("Would you like to play another game? (Y/N)\n ")
+        if ag.lower() == "y":
+            ques()
+        
+        elif ag.lower() == "n":
+                    print("Thank you for playing")
+                    quit()
+
+        else:
+            print("Please enter either y or n")
+            continue
+
+def ques():
+    while True:
+        
+        welcome = input("Welcome to a Game of Blackjack!, would u like to play?\nY/N ")
+        if welcome.lower() == "y":
+            print("Then let's get going!")
+            game()
+
+        elif welcome.lower() == "n":
+            print("Thank you for playing")
+            quit()
+
+        else:
+            print("Please enter either y or n")
+            continue
+
+def game():   
+    cards = [2,3,4,5,6,7,8,9,10,"J","Q","K","A"]* 4
+    face = ["J", "Q", "K"]
+    ace = ["A"]
+
+
+    user_deal = []
+    dealer_deal = []
+
+    for i in range(2):
+        user_deal.append(random.choice(cards))
+        dealer_deal.append(random.choice(cards))
+
+    print(user_deal,dealer_deal)
+
+
+
+    def card_sum(crd):
+        total = 0
+        for card in crd:
+            if card == "J" or card == "K" or card == "Q":
+                total+=10
+            elif card == "A":
+                if total >= 11:
+                    total += 1
+                else:
+                    total += 11
+            else:
+                total += card
+        
+        return total
+
+    print("Your initial deck is {} with a sum of {}".format(user_deal,card_sum(user_deal)))
+    dealer1st = dealer_deal[0]
+    print("Dealer's first card:{}".format(dealer1st))
+
+    while True:
+        hit = input("Would you like to Hit or Stay?\nH/S ")
+        if hit.lower() == "h":
+            user_deal.append(random.choice(cards))
+            print("Your deck is {} with a sum of {}".format(user_deal,card_sum(user_deal)))
+            if card_sum(user_deal) > 21:
+                print("Your total is above 21!, you lost")
+                again()
+        elif hit.lower() == "s":
+            break
+
+    while True: 
+        if card_sum(dealer_deal) < 17:
+            dealer_deal.append(random.choice(cards))
+            if card_sum(dealer_deal) > 21:
+                print("The dealer went over with a sum of {} and the set {}, you win!".format(card_sum(dealer_deal), dealer_deal))
+                again()
+        elif card_sum(dealer_deal) >= 17:
+            break
+
+
+    if card_sum(user_deal) > card_sum(dealer_deal):
+        if card_sum(user_deal) == 21:
+            print("Congratulations!, you've dealt a blackjack!")
+            again()
+        else:
+            print("Congratulations!, you beat the dealer by a margin of {}".format(card_sum(user_deal) - card_sum(dealer_deal)))
+            again()
+
+    elif card_sum(dealer_deal) > card_sum(user_deal):
+        if card_sum(dealer_deal) == 21:
+            print("The dealer dealt a BlackJack! with the set {}, you lose".format(dealer_deal))
+            again()
+        else:
+            print("The dealer has beat you by a margin of {} with the set {}".format(card_sum(dealer_deal) - card_sum(user_deal), dealer_deal))
+            again()
+
+    else:
+        print("You lose!, as you and the dealer have the same sets {}  {}. Better luck next time!".format(user_deal,dealer_deal))
+        again()
+
+ques()
